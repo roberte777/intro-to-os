@@ -10,7 +10,7 @@ using namespace::std;
 void readFile(string filename);
 // identify int and increment group count
 void identifyInt(int num);
-// get input file name
+// get input file name and output file name
 string getFile();
 string getOutFile();
 
