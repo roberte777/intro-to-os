@@ -101,7 +101,9 @@ void generateThreads(){
     //create a thread for each group
     for (int i = 0; i < 10; i++){
         int startIndex = i * 10;
-        pthread_create(&threads[i], NULL, partitionNums, (void *)&startIndex );
+        int *arg = (int *) malloc(sizeof(*arg));
+        *arg = startIndex;
+        pthread_create(&threads[i], NULL, partitionNums, arg );
     }
     //join threads
     for (int i = 0; i < 10; i++){

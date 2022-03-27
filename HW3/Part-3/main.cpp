@@ -7,6 +7,7 @@
 #include <pthread.h>
 using namespace::std;
 
+ //https://stackoverflow.com/questions/19232957/pthread-create-and-passing-an-integer-as-the-last-argument
 
 // read in file 
 void readFile(string filename);
@@ -49,10 +50,11 @@ map<int, string> groupList = {
 
 vector<int> nums;
 pthread_mutex_t mutex[10];
+pthread_t threads[10];
 
 
 int main() {
-    
+
     //filenames
     string filename;
     string outFile;
@@ -96,9 +98,7 @@ void readFile(string filename) {
 }
 
 void generateThreads(){
-    //create an array of 10 threads
-    pthread_t threads[10];
-    
+
     //create mutexes
     for (int i = 0; i < 10; i++){
         if (pthread_mutex_init(&mutex[i], NULL) != 0) {
@@ -107,16 +107,18 @@ void generateThreads(){
         }
     }
 
-
     //create a thread for each group
     for (int i = 0; i < 10; i++){
         int startIndex = i * 10;
+        int *arg = (int *) malloc(sizeof(*arg));
+        *arg = startIndex;
 
-        if (pthread_create(&threads[i], NULL, partitionNums, (void *)&startIndex ) != 0){
+        if (pthread_create(&threads[i], NULL, partitionNums, arg ) != 0){
             cout << "thread creation failed" << endl;
             exit(1);
         }
     }
+
     //join threads
     for (int i = 0; i < 10; i++){
         if (pthread_join(threads[i], NULL) != 0){
@@ -124,6 +126,7 @@ void generateThreads(){
             exit(1);
         }
     }
+
     //destroy mutexes
     for (int i = 0; i < 10; i++){
         if (pthread_mutex_destroy(&mutex[i]) != 0){
@@ -134,14 +137,12 @@ void generateThreads(){
 }
 
 void *partitionNums(void* startIndex) {
-    int start = *(int*)startIndex;
+    int start = *((int*)startIndex);
+    int end = start + 10;
     //for each number in nums starting at startIndex, determine group and increment group count
-    for (int i = start; i < (start + 10); i++){
+    for (int i = start; i < end; i++){
         int group = determineGroup(nums[i]);
         pthread_mutex_lock(&mutex[group - 1]);
-        if (group == 1){
-            cout << group <<": " << nums[i] << endl;
-        }
         incrementGroup(group, nums[i]);
         pthread_mutex_unlock(&mutex[group - 1]);
     }
