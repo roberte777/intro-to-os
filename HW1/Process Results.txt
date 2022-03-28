@@ -1,0 +1,7 @@
+Child Process ID: 54874 Line Number: 0 Line Character Count: 1
+
+Child Process ID: 54875 Line Number: 1 Line Character Count: 37
+
+Child Process ID: 54876 Line Number: 2 Line Character Count: 3
+
+Total Character Count: 41

@@ -1,0 +1,7 @@
+Line Number: 0 Line Character Count: 1
+
+Line Number: 1 Line Character Count: 37
+
+Line Number: 2 Line Character Count: 3
+
+Total Character Count: 41
